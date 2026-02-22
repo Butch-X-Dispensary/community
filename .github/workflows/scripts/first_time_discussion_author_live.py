@@ -84,12 +84,11 @@ def main() -> int:
     current_discussion_number_raw = require_env("CURRENT_DISCUSSION_NUMBER")
     current_discussion_number = int(current_discussion_number_raw)
 
-    print("=== DEBUG (inputs) ===")
-    print("owner/repo:", f"{owner}/{repo}")
-    print("username:", username)
-    print("current_discussion_number:", current_discussion_number_raw)
-    print("======================")
-
+    print("=== BUTCH SIGNAL: AUTHOR VALIDATION ===")
+    print(f"Target Author: {username} | Location: {owner}/{repo}")
+    print(f"Current Discussion: #{current_discussion_number_raw}")
+    print("=======================================")
+    
     # Defaults
     should_welcome = "false"
     status = "inconclusive"
@@ -99,11 +98,10 @@ def main() -> int:
     try:
         gql = graphql_search_discussions(token, owner, repo, username)
     except urllib.error.HTTPError as e:
-        # Unpack the RuntimeError from the cause if present
-        print("GraphQL request failed.")
+        print("GraphQL request failed. Potential interference detected.")
         print("HTTP status:", getattr(e, "code", "unknown"))
         if e.__cause__:
-            print("cause:", str(e.__cause__))
+            print("Cause Analysis:", str(e.__cause__))
 
         status = "error"
         reason = "graphql_error"
@@ -113,7 +111,7 @@ def main() -> int:
         return 0
 
     if "errors" in gql and gql["errors"]:
-        print("GraphQL error response:")
+        print("GraphQL Error: Protocol Resonance Failure")
         print(json.dumps(gql, indent=2))
 
         status = "error"
@@ -126,11 +124,11 @@ def main() -> int:
     discussion_count = int(gql["data"]["search"].get("discussionCount") or 0)
     nodes = gql["data"]["search"]["nodes"]
     
-    print("=== DEBUG (GraphQL response) ===")
-    print("discussionCount:", discussion_count)
+    print("=== SEARCH RESULTS (BARANGAY 12 NODE) ===")
+    print("Discussion Count Found:", discussion_count)
     for index, node in enumerate(nodes, start=1):
-        print(f"GraphQL hit #{index}: #{node['number']} {node['url']}")
-    print("===============================")
+        print(f"Hit #{index}: #{node['number']} | Identity Check: {node['title'][:30]}...")
+    print("=========================================")
     
     # Discussion-created logic:
     # - If we see 2+ discussions, they are not first-time.
