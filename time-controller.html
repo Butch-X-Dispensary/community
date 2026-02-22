@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time Controller</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+.container { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 500px; width: 100%; text-align: center; }
+h1 { color: #333; margin-bottom: 20px; }
+.time-display { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; border-radius: 15px; margin: 30px 0; font-size: 56px; font-weight: bold; box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4); }
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 30px 0; }
+button { padding: 12px 20px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.3s ease; }
+.rewind { background: #ff6b6b; color: white; }
+.forward { background: #69db7c; color: white; }
+.reset { background: #ffd43b; color: #333; grid-column: 1 / -1; }
+button:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+.input-group { display: flex; gap: 8px; margin: 20px 0; }
+input { flex: 1; padding: 10px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 14px; }
+.set-btn { background: #4c6ef5; color: white; padding: 10px 20px; cursor: pointer; border: none; border-radius: 10px; }
+.set-btn:hover { background: #3f5dd9; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Time Controller</h1>
+<div class="time-display" id="time">30</div>
+<div class="input-group">
+<input type="number" id="input" placeholder="Set time" min="0">
+<button class="set-btn" onclick="setTime()">Set</button>
+</div>
+<div class="controls">
+<button class="rewind" onclick="rewind()">Rewind 5s</button>
+<button class="forward" onclick="forward()">Forward 5s</button>
+<button class="reset" onclick="reset()">Reset</button>
+</div>
+</div>
+<script>
+let t = 30;
+function up() { document.getElementById('time').innerText = t; }
+function rewind() { t = t < 5 ? 0 : t - 5; up(); }
+function forward() { t = t > 295 ? 300 : t + 5; up(); }
+function reset() { t = 30; up(); }
+function setTime() { const n = parseInt(document.getElementById('input').value); if (!isNaN(n)) { t = Math.max(0, Math.min(300, n)); document.getElementById('input').value = ''; up(); } }
+</script>
+</body>
+</html>
